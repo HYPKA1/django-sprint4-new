@@ -22,6 +22,7 @@ ProfileEditForm = UserForm
 UserEditForm = UserForm
 ProfileForm = UserForm
 
+
 class PostForm(forms.ModelForm):
 
     class Meta:
