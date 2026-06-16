@@ -8,17 +8,19 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 
 from .constants import POSTS_LIMIT
-from .forms import CommentForm, PostForm, ProfileEditForm, UserForm
+from .forms import CommentForm, PostForm, ProfileEditForm
 from .models import Category, Comment, Post
 
 
 User = get_user_model()
+
 
 def paginate(request, posts):
     """Пагинация постов."""
     paginator = Paginator(posts, POSTS_LIMIT)
     page_number = request.GET.get('page')
     return paginator.get_page(page_number)
+
 
 def get_published_posts():
     """Опубликованные посты."""
@@ -81,6 +83,7 @@ def post_detail(request, post_id):
         'comments': post.comments.select_related('author'),
     }
     return render(request, 'blog/detail.html', context)
+
 
 def category_posts(request, category_slug):
     """Посты по категориям."""
@@ -186,6 +189,7 @@ def edit_post(request, post_id):
         'form': form,
     }
     return render(request, 'blog/create.html', context)
+
 
 @login_required
 def delete_post(request, post_id):
