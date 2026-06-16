@@ -149,4 +149,7 @@ dmypy.json
 media/
 
 sent_emails/
-
+media/
+__pycache__/
+*.pyc
+db.sqlite3
