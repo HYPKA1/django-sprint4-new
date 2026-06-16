@@ -1,25 +1,17 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import UserCreationForm
-from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
+from .paginations import paginate_posts
 
-from .constants import POSTS_LIMIT
-from .forms import CommentForm, PostForm, ProfileEditForm
+from .forms import CommentForm, PostForm, UserEditForm
 from .models import Category, Comment, Post
 
 
 User = get_user_model()
-
-
-def paginate(request, posts):
-    """Пагинация постов."""
-    paginator = Paginator(posts, POSTS_LIMIT)
-    page_number = request.GET.get('page')
-    return paginator.get_page(page_number)
 
 
 def get_published_posts():
@@ -37,12 +29,6 @@ def get_published_posts():
     ).order_by(
         '-pub_date'
     )
-
-
-def paginate_posts(request, posts):
-    paginator = Paginator(posts, POSTS_LIMIT)
-    page_number = request.GET.get('page')
-    return paginator.get_page(page_number)
 
 
 def index(request):
@@ -75,7 +61,7 @@ def post_detail(request, post_id):
     )
 
     if post_is_hidden and post.author != request.user:
-        raise Http404
+        raise Http404('Публикация не найдена.')
 
     context = {
         'post': post,
@@ -125,7 +111,7 @@ def profile(request, username):
             pub_date__lte=timezone.now(),
         )
 
-    page_obj = paginate(request, posts)
+    page_obj = paginate_posts(request, posts)
 
     context = {
         'profile': profile,
@@ -137,7 +123,7 @@ def profile(request, username):
 @login_required
 def edit_profile(request):
     """Редактирование профиля."""
-    form = ProfileEditForm(
+    form = UserEditForm(
         request.POST or None,
         instance=request.user,
     )

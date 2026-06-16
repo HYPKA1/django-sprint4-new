@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.db import models
 
-from .constants import TITLE_MAX_LENGTH
+from .constants import COMMENT_TEXT_PREVIEW_LENGTH, TITLE_MAX_LENGTH
 
 
 User = get_user_model()
@@ -17,6 +17,7 @@ class PublishedModel(models.Model):
 
     class Meta:
         abstract = True
+        ordering = ('created_at',)
 
 
 class Category(PublishedModel):
@@ -32,6 +33,7 @@ class Category(PublishedModel):
     )
 
     class Meta:
+        ordering = ('title',)
         verbose_name = 'категория'
         verbose_name_plural = 'Категории'
 
@@ -43,6 +45,7 @@ class Location(PublishedModel):
     name = models.CharField('Название места', max_length=TITLE_MAX_LENGTH)
 
     class Meta:
+        ordering = ('name',)
         verbose_name = 'местоположение'
         verbose_name_plural = 'Местоположения'
 
@@ -117,5 +120,5 @@ class Comment(models.Model):
         verbose_name = 'комментарий'
         verbose_name_plural = 'Комментарии'
 
-        def __str__(self):
-            return self.text[:30]
+    def __str__(self):
+        return self.text[:COMMENT_TEXT_PREVIEW_LENGTH]

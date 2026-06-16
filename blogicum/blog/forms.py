@@ -1,13 +1,14 @@
 from django import forms
 from django.contrib.auth import get_user_model
 
-from .models import Post, Comment
+from .models import Comment, Post
 
 
 User = get_user_model()
 
 
-class UserForm(forms.ModelForm):
+class UserEditForm(forms.ModelForm):
+
     class Meta:
         model = User
         fields = (
@@ -16,11 +17,6 @@ class UserForm(forms.ModelForm):
             'last_name',
             'email',
         )
-
-
-ProfileEditForm = UserForm
-UserEditForm = UserForm
-ProfileForm = UserForm
 
 
 class PostForm(forms.ModelForm):
